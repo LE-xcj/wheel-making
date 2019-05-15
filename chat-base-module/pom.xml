@@ -16,6 +16,13 @@
       <artifactId>netty-all</artifactId>
       <version>5.0.0.Alpha2</version>
     </dependency>
+
+    <!--阿里的fastjson-->
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.47</version>
+    </dependency>
   </dependencies>
 
 </project>

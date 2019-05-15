@@ -1,6 +1,8 @@
 package com.xc.service;
 
+import com.alibaba.fastjson.JSON;
 import com.xc.pojo.ChatProtocol;
+import com.xc.pojo.dto.MessageDTO;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.ReferenceCountUtil;
@@ -18,10 +20,15 @@ public class ClientHandler extends ChannelHandlerAdapter {
 
 
         try {
-            ChatProtocol protocol = (ChatProtocol) msg;
 
+            ChatProtocol protocol = (ChatProtocol) msg;
             String data = new String(protocol.getContent());
-            System.out.println("server : " + data);
+
+            MessageDTO dto = JSON.parseObject(data, MessageDTO.class);
+            String source = dto.getSource();
+            String content = dto.getContent();
+
+            System.out.println(source + " : " + content);
 
         } finally {
 

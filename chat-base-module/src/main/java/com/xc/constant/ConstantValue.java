@@ -14,5 +14,10 @@ public class ConstantValue {
     public static final int BASE_LENGTH = 4 + 4;
 
     public static final String CHARSET = "utf-8";
+
+    public static final int REGISTE = 1;
+
+    public static final int SINGLECHAT = 1;
+
 }
     

@@ -3,6 +3,7 @@ package com.xc.config;
 import com.xc.server.ChatServer;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @SpringBootApplication
 @Configuration
+@ComponentScan(basePackages = "com.xc")
 public class ApplicationConfig implements CommandLineRunner{
 
     @Override

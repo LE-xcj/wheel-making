@@ -1,6 +1,7 @@
 package com.xc;
 
 import com.xc.client.Client;
+import com.xc.view.ClientView;
 
 /**
  * @author chujian
@@ -10,8 +11,9 @@ import com.xc.client.Client;
  */
 public class Main {
 
+
     public static void main(String[] args){
-        new Client("127.0.0.1", 10086);
+        new ClientView("127.0.0.1", 10086);
     }
 
 }

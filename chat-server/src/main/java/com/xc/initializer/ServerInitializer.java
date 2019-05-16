@@ -4,6 +4,7 @@ import com.xc.service.ChatServerHandler;
 import com.xc.utils.ChatChannelInitializer;
 import com.xc.utils.ChatDecoder;
 import com.xc.utils.ChatEncoder;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 
 /**
@@ -16,15 +17,32 @@ public class ServerInitializer extends ChatChannelInitializer {
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
+
+        ChannelPipeline pipeline = socketChannel.pipeline();
+
         //添加自定义的协议编码和解码工具
-        socketChannel.pipeline().addLast(new ChatEncoder());
-        socketChannel.pipeline().addLast(new ChatDecoder());
+        //IO读写业务
+        pipeline.addLast(new ChatEncoder())
+                .addLast(new ChatDecoder())
+                .addLast(new ChatServerHandler());
+
 
         //字符串解析器
         //socketChannel.pipeline().addLast(new StringDecoder());
 
-        //IO读写业务
-        socketChannel.pipeline().addLast(new ChatServerHandler());
+
+        // 当连接在60秒内没有接收到消息时，触发事件s
+//        socketChannel.pipeline().addLast(new IdleStateHandler(
+//                ConstantValue.READ_IDLE_TIME_OUT,
+//                ConstantValue.WRITE_IDLE_TIME_OUT,
+//                ConstantValue.ALL_IDLE_TIME_OUT
+//        ));
+
+
+        // 读超时
+        //pipeline.addLast(new ReadTimeoutHandler(5));
+
+
     }
 }
     

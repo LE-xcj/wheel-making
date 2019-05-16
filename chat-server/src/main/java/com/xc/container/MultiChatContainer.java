@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MultiChatContainer {
 
-    private static Map<String, List<ChannelHandlerContext>> multi;
+    private static Map<String, List<String>> multi;
 
     static {
         multi = new ConcurrentHashMap<>();
@@ -26,18 +26,20 @@ public class MultiChatContainer {
     /**
      * 一个用户加入到群聊
      * 房号为key
+     * @param roomId
      * @param id
-     * @param channelHandlerContext
      */
-    public static void add (String id, ChannelHandlerContext channelHandlerContext) {
+    public static void add (String roomId, String id) {
 
-        List<ChannelHandlerContext> list = multi.get(id);
+        List<String> ids = multi.get(roomId);
 
-        if (null == list) {
-            list = new LinkedList<>();
+        if (null == ids) {
+            ids = new LinkedList<>();
         }
 
-        list.add(channelHandlerContext);
+        ids.add(id);
+
+        multi.put(roomId, ids);
     }
 
 
@@ -45,29 +47,39 @@ public class MultiChatContainer {
      * 移除群聊
      * @param id
      */
-    public static void remove (String id, ChannelHandlerContext context) {
+    public static void remove (String roomId, String id) {
 
-        List<ChannelHandlerContext> list = multi.get(id);
+        List<String> list = multi.get(roomId);
 
         if (null == list || list.isEmpty()) {
             return;
         }
 
-        list.remove(context);
+        list.remove(id);
     }
 
 
-    public static List<ChannelHandlerContext> getChannels (String key) {
+    /**
+     * 获取某个群中所有用户
+     * @param key
+     * @return
+     */
+    public static List<String> getChannels (String key) {
 
-        List<ChannelHandlerContext> channelHandlerContexts = multi.get(key);
+        List<String> ids = multi.get(key);
 
-        return channelHandlerContexts;
+        return ids;
 
     }
 
+    /**
+     * 群聊人数
+     * @param key
+     * @return
+     */
     public static int getSize(String key) {
 
-        List<ChannelHandlerContext> channelHandlerContexts = multi.get(key);
+        List<String> channelHandlerContexts = multi.get(key);
         return channelHandlerContexts.size();
     }
 

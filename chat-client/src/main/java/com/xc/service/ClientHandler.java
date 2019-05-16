@@ -1,6 +1,7 @@
 package com.xc.service;
 
 import com.alibaba.fastjson.JSON;
+import com.xc.constant.ConstantValue;
 import com.xc.pojo.ChatProtocol;
 import com.xc.pojo.dto.MessageDTO;
 import io.netty.channel.ChannelHandlerAdapter;
@@ -28,7 +29,16 @@ public class ClientHandler extends ChannelHandlerAdapter {
             String source = dto.getSource();
             String content = dto.getContent();
 
-            System.out.println(source + " : " + content);
+
+            String pre = null;
+
+            if (dto.getType() == ConstantValue.SINGLECHAT) {
+                pre = "单聊" + source;
+            } else {
+                pre = "群聊" + source;
+            }
+
+            System.out.println(pre  + " : " + content);
 
         } finally {
 
@@ -42,6 +52,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        cause.printStackTrace();
         System.out.println("断开连接.....");
         ctx.close();
     }

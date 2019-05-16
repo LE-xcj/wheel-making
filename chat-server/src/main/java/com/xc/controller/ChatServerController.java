@@ -25,6 +25,7 @@ public class ChatServerController {
     public void operate(ChannelHandlerContext sourceCtx, String dtoStr) {
 
         MessageDTO dto = JSON.parseObject(dtoStr, MessageDTO.class);
+
         int action = dto.getAction();
 
         // 连接注册
@@ -47,22 +48,42 @@ public class ChatServerController {
      */
     private void registe(ChannelHandlerContext sourceCtx, MessageDTO dto) {
 
-        int action = dto.getAction();
+        if (!checkIdentity (dto.getToken())) {
+            autoRepsone(sourceCtx, "非法访问.....");
+            sourceCtx.close();
+            return;
+        }
 
-        if (action == ConstantValue.SINGLECHAT) {
+        int type = dto.getType();
 
-            String source = dto.getSource();
-            SingleChatContainer.add(source, sourceCtx);
+        String source = dto.getSource();
+        SingleChatContainer.add(source, sourceCtx);
 
-        } else {
-
+        if (!(type == ConstantValue.SINGLECHAT)) {
             String target = dto.getTarget();
-            MultiChatContainer.add(target, sourceCtx);
+            MultiChatContainer.add(target, dto.getSource());
 
             int size = MultiChatContainer.getSize(target);
             autoRepsone(sourceCtx, "当前群里人数： " + size);
+
         }
 
+    }
+
+
+    /**
+     * 身份验证
+     * @param token
+     * @return
+     */
+    private boolean checkIdentity(String token) {
+
+        // 这里模拟从缓存或者是token验证系统中检验该token是否有效
+        if (null == token || token.length() > 4) {
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -78,18 +99,33 @@ public class ChatServerController {
         // 聊天类型，传送目的地， 传送内容
         int type = dto.getType();
         String target = dto.getTarget();
-        String context = dto.getContent();
 
         // 单聊
         if (type == ConstantValue.SINGLECHAT) {
 
             ctx = SingleChatContainer.getChannel(target);
-            response(ctx, context, sourceCtx);
+            response(ctx, dto, sourceCtx);
 
         } else {
 
-            List<ChannelHandlerContext> channels = MultiChatContainer.getChannels(target);
-            broadcast (channels, context);
+            // 获取群聊中的ids
+            List<String> ids = MultiChatContainer.getChannels(target);
+            List<ChannelHandlerContext> channels = new ArrayList<>(ids.size());
+
+            // 封装
+            for (String id : ids) {
+
+                // 不用发给自己
+                if (id.equals(dto.getSource())) {
+                    continue;
+                }
+
+                ChannelHandlerContext channel = SingleChatContainer.getChannel(id);
+                channels.add(channel);
+            }
+
+            // 广播
+            broadcast (channels, dto);
 
         }
 
@@ -99,11 +135,13 @@ public class ChatServerController {
     /**
      * 群聊广播
      * @param channels
-     * @param context
+     * @param dto
+     *
      */
-    private void broadcast(List<ChannelHandlerContext> channels, String context) {
+    private void broadcast(List<ChannelHandlerContext> channels, MessageDTO dto) {
 
-        byte[] bytes = context.getBytes();
+        String strDto = JSON.toJSONString(dto);
+        byte[] bytes = strDto.getBytes();
         int length = bytes.length;
 
         for (ChannelHandlerContext ctx : channels) {
@@ -121,10 +159,10 @@ public class ChatServerController {
     /**
      * 单聊
      * @param ctx
-     * @param context
+     * @param dto
      * @param sourceCtx
      */
-    private void response(ChannelHandlerContext ctx, String context, ChannelHandlerContext sourceCtx) {
+    private void response(ChannelHandlerContext ctx, MessageDTO dto, ChannelHandlerContext sourceCtx) {
 
 
         if (ctx == null) {
@@ -138,7 +176,7 @@ public class ChatServerController {
         List<ChannelHandlerContext> channels = new ArrayList<>();
         channels.add(ctx);
 
-        broadcast(channels, context);
+        broadcast(channels, dto);
     }
 
     /**
@@ -158,6 +196,7 @@ public class ChatServerController {
         ChatProtocol response = new ChatProtocol(str.getBytes().length, str.getBytes());
         sourceCtx.channel().writeAndFlush(response);
     }
+
 
 }
     

@@ -20,6 +20,7 @@ public class ClientInitializer extends ChatChannelInitializer {
         //添加自定义的协议编码和解码工具
         socketChannel.pipeline().addLast(new ChatEncoder());
         socketChannel.pipeline().addLast(new ChatDecoder());
+        //socketChannel.pipeline().addLast(new ReadTimeoutHandler(5));
 
         //字符串解析器
         //socketChannel.pipeline().addLast(new StringDecoder());

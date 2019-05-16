@@ -13,7 +13,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.util.Scanner;
-import java.util.concurrent.locks.Condition;
 
 /**
  * @author chujian
@@ -54,6 +53,8 @@ public class Client {
 
             send(future);
             future.channel().closeFuture().sync();
+
+            //reconnect(client, future);
 
 
         } catch (InterruptedException e) {
@@ -97,6 +98,8 @@ public class Client {
         MessageDTO dto = new MessageDTO();
         dto.setAction(ConstantValue.REGISTE);
         dto.setSource(this.source);
+        dto.setType(this.type);
+        dto.setToken(this.tooken);
         dto.setTarget(this.target);
         String strDto = JSON.toJSONString(dto);
 
@@ -124,5 +127,19 @@ public class Client {
         return strDto;
     }
 
+
+
+    private void reconnect(final Bootstrap client, ChannelFuture future) {
+
+        ChannelFuture connect = future;
+
+        if (future.channel().isActive()) {
+            connect = client.connect();
+        }
+
+        System.out.println("reconnect.....");
+
+        send(connect);
+    }
 }
     

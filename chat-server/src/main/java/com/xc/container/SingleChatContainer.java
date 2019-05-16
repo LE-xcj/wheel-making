@@ -1,6 +1,6 @@
 package com.xc.container;
 
-import io.netty.channel.ChannelHandlerContext;
+import com.xc.pojo.entity.ChannelHandlerContextEntity;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SingleChatContainer {
 
-    private static Map<String, ChannelHandlerContext> single;
+    private static Map<String, ChannelHandlerContextEntity> single;
 
     static {
         single = new ConcurrentHashMap<>();
@@ -26,7 +26,7 @@ public class SingleChatContainer {
      * @param source
      * @param context
      */
-    public static void add (String source, ChannelHandlerContext context) {
+    public static void add (String source, ChannelHandlerContextEntity context) {
         single.put(source, context);
     }
 
@@ -34,7 +34,7 @@ public class SingleChatContainer {
         single.remove(source);
     }
 
-    public static ChannelHandlerContext getChannel (String id) {
+    public static ChannelHandlerContextEntity getChannel (String id) {
         return single.get(id);
     }
 }

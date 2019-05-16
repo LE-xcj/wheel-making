@@ -1,6 +1,9 @@
 package com.xc.config;
 
+import com.xc.container.MapperContainer;
+import com.xc.mapper.MessageMapper;
 import com.xc.server.ChatServer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,8 +20,13 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackages = "com.xc")
 public class ApplicationConfig implements CommandLineRunner{
 
+    @Autowired
+    private MessageMapper messageMapper;
+
     @Override
     public void run(String... args) throws Exception {
+        System.out.println(messageMapper);
+        MapperContainer.setMessageMapper(this.messageMapper);
         ChatServer.work();
     }
 

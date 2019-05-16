@@ -1,8 +1,10 @@
 package com.xc.service;
 
 import com.xc.constant.ConstantValue;
+import com.xc.constant.StrategyValue;
 import com.xc.controller.ChatServerController;
 import com.xc.pojo.ChatProtocol;
+import com.xc.pojo.entity.ChannelHandlerContextEntity;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -17,13 +19,18 @@ import java.net.SocketAddress;
  */
 public class ChatServerHandler extends ChannelHandlerAdapter{
 
+
+    private ChannelHandlerContextEntity entity;
+
     /**
      * channel通道激活，也就是新建状态
      * @param ctx
-     * @throws Exception
      */
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx)  {
+
+        // 初始化entity
+        this.entity = new ChannelHandlerContextEntity(ctx, StrategyValue.TCP_WRITE_STRATEGY);
 
         //不管同一个应用程序连多少次，就建立多少条channel
         SocketAddress socketAddress = ctx.channel().remoteAddress();
@@ -48,6 +55,7 @@ public class ChatServerHandler extends ChannelHandlerAdapter{
 
             //内容解码
             String dtoStr = new String(content, ConstantValue.CHARSET);
+            System.out.println(dtoStr);
 
             //内容转发
             operate(ctx, dtoStr);
@@ -82,7 +90,7 @@ public class ChatServerHandler extends ChannelHandlerAdapter{
     }
 
 
-    private ChatServerController controller = new ChatServerController();
+    private ChatServerController controller = ChatServerController.getController();
 
 
     /**
@@ -92,7 +100,11 @@ public class ChatServerHandler extends ChannelHandlerAdapter{
      */
     private void operate(ChannelHandlerContext sourceCtx, String data) {
 
-        controller.operate(sourceCtx, data);
+        if (this.entity == null) {
+            this.entity = new ChannelHandlerContextEntity(sourceCtx, StrategyValue.TCP_WRITE_STRATEGY);
+        }
+
+        controller.operate(this.entity, data);
 
     }
 

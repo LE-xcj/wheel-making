@@ -41,5 +41,6 @@ public class ConstantValue {
         ports.add(WEBSOCKET_PORT);
     }
 
+    public static final int UNREAD = 0;
 }
     

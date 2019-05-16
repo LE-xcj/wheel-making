@@ -5,37 +5,86 @@
     <title>Title</title>
 </head>
 <body>
-<input type="text" id="message">
+<input type="text" id="source" placeholder="你的id"/> <br />
+<input type="text" id="type" placeholder="1单聊 or 2群聊"/> <br />
+<input type="text" id="target" placeholder="目的id"/> <br />
+<input type="text" id="token" placeholder="token"/>
+<input type="text" id="content" placeholder="内容"> <br />
+
+<input type="button" value="连接" onclick="connect()">
 <input type="button" value="发送消息" onclick="sendMsg()">
+
 <br/>
 接收到消息:
 <p id="server_message" style="background-color: #AAAAAA"></p>
 
 <script>
     var websocket = null;
-    //判断当前浏览器是否支持 webSocket
-    if (window.WebSocket) {
-        websocket = new WebSocket("ws://127.0.0.1:10087/caht");
-        websocket.onopen = function (ev) {
-            console.log("建立连接");
+
+    function getStrDto(action) {
+        var dto = new Object();
+
+        dto.action = action;
+        dto.content = document.getElementById("content").value;
+        dto.source = document.getElementById("source").value;
+        dto.target = document.getElementById("target").value;
+        dto.token = document.getElementById("token").value;
+        dto.type = document.getElementById("type").value;
+
+        var str_dto = JSON.stringify(dto);
+
+        return str_dto;
+
+    }
+    
+    function connect() {
+
+        //判断当前浏览器是否支持 webSocket
+        if (window.WebSocket) {
+            websocket = new WebSocket("ws://127.0.0.1:10087/caht");
+            websocket.onopen = function (ev) {
+
+                console.log("建立连接");
+                registe();
+
+            }
+            websocket.onclose = function (ev) {
+                console.log("断开连接");
+            }
+
+            websocket.onmessage = function (frame) {
+                console.log("接收到服务器的消息" + frame);
+
+                var dto = JSON.parse(frame.data);
+                var source = dto.source;
+                var content = dto.content;
+                var type = dto.type;
+
+                var pre;
+                if (type == 1) {
+                    pre = "单聊";
+                } else {
+                    pre = "群聊"
+                }
+                var server_message = document.getElementById("server_message");
+                server_message.innerHTML += pre + source + ": " + content + "<br/>";
+            }
+        } else {
+            alert("当前浏览器不支持 webSocket")
         }
-        websocket.onclose = function (ev) {
-            console.log("断开连接");
-        }
-        websocket.onmessage = function (ev) {
-            console.log("接收到服务器的消息" + ev.data);
-            var server_message = document.getElementById("server_message");
-            server_message.innerHTML += ev.data + "<br/>";
-        }
-    } else {
-        alert("当前浏览器不支持 webSocket")
+
+    }
+    
+    function registe() {
+        var str_dto = getStrDto(1);
+        websocket.send(str_dto);
     }
 
     function sendMsg() {
-        console.info(websocket.readyState);
-        var message = document.getElementById("message");
-        websocket.send(message.value)
+        var str_dto = getStrDto(0);
+        websocket.send(str_dto);
     }
+
 </script>
 </body>
 </html>

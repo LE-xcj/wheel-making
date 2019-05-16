@@ -1,0 +1,14 @@
+spring:
+  datasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/wheel-making?useUnicode=true&characterEncoding=utf8
+      username: root
+      password:
+
+mybatis:
+  type-aliases-package: com.xc.pojo
+  mapper-locations: classpath:mapper/*.xml
+
+logging:
+  level:
+    com.xc.mapper : debug

@@ -42,5 +42,9 @@ public class ConstantValue {
     }
 
     public static final int UNREAD = 0;
+
+
+    // 分隔符
+    public static final String SEPERATOR = "$_$";
 }
     

@@ -5,10 +5,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.xc</groupId>
-  <artifactId>heartbeat-detect</artifactId>
+  <artifactId>web-server</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>heartbeat-detect</name>
-
+  <name>web-server</name>
 
   <dependencies>
 
@@ -18,12 +17,11 @@
       <version>5.0.0.Alpha2</version>
     </dependency>
 
-      <dependency>
-          <groupId>com.xc</groupId>
-          <artifactId>chat-base-module</artifactId>
-        <version>1.0-SNAPSHOT</version>
-      </dependency>
-
+    <dependency>
+      <groupId>com.xc</groupId>
+      <artifactId>chat-base-module</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
 </project>

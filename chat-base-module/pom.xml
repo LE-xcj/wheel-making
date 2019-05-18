@@ -23,6 +23,23 @@
       <artifactId>fastjson</artifactId>
       <version>1.2.47</version>
     </dependency>
+
+    <!-- 系统信息收集 -->
+    <dependency>
+      <groupId>org.fusesource</groupId>
+      <artifactId>sigar</artifactId>
+      <version>1.6.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.kaazing</groupId>
+      <artifactId>sigar.dist</artifactId>
+      <version>1.0.0.0</version>
+      <classifier>distribution</classifier>
+      <type>zip</type>
+    </dependency>
+
+
   </dependencies>
 
 </project>

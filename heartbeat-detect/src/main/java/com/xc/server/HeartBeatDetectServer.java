@@ -16,17 +16,27 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
  */
 public class HeartBeatDetectServer {
 
-    private HeartBeatDetectServer() {
+    private static HeartBeatDetectServer heartBeatDetectServer;
 
-        init();
-
+    static {
+        heartBeatDetectServer = new HeartBeatDetectServer();
     }
 
-    private void init() {
+    private HeartBeatDetectServer() { }
 
+    public static void create() {
+        init();
+    }
+
+    private static void init() {
+
+        // 连接线程组
         EventLoopGroup connection = new NioEventLoopGroup();
+
+        // io线程组
         EventLoopGroup io = new NioEventLoopGroup();
 
+        // 服务端
         ServerBootstrap server = new ServerBootstrap();
 
         server.group(connection, io)
@@ -39,8 +49,12 @@ public class HeartBeatDetectServer {
 
         try {
 
+            // 绑定端口
             ChannelFuture future = server.bind("127.0.0.1", 10086).sync();
 
+            System.out.println("server start.....");
+
+            // 关闭
             future.channel().closeFuture().sync();
 
         } catch (InterruptedException e) {

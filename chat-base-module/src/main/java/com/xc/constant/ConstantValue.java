@@ -45,6 +45,12 @@ public class ConstantValue {
 
 
     // 分隔符
-    public static final String SEPERATOR = "$_$";
+    public static final String SEPERATOR = "${}";
+
+
+
+    public static final String HEARTBEAT_DETECT_IP = "127.0.0.1";
+
+    public static final int HEARTBEAT_DETECT_PORT = 10086;
 }
     

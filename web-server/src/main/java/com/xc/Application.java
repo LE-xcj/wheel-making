@@ -1,5 +1,6 @@
 package com.xc;
 
+import com.xc.constant.ConstantValue;
 import com.xc.server.WebServerAlive;
 
 /**
@@ -11,7 +12,7 @@ import com.xc.server.WebServerAlive;
 public class Application {
 
     public static void main(String[] args){
-        WebServerAlive.create();
+        WebServerAlive.connect(ConstantValue.HEARTBEAT_DETECT_IP, ConstantValue.HEARTBEAT_DETECT_PORT);
     }
 
 }

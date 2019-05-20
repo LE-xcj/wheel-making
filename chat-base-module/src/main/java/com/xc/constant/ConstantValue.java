@@ -52,5 +52,10 @@ public class ConstantValue {
     public static final String HEARTBEAT_DETECT_IP = "127.0.0.1";
 
     public static final int HEARTBEAT_DETECT_PORT = 10086;
+
+
+    public static final double MEMORY_PERCENT_THRESHOLD = 0.5;
+
+    public static final int HEARTBEAT_DETECT_PERIOD = 10;
 }
     

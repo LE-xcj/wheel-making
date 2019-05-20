@@ -1,5 +1,6 @@
 package com.xc.handler;
 
+import com.xc.alarm.impl.NormalAlarm;
 import com.xc.constant.EncryptionAndDecryption;
 import com.xc.service.HeartBeatService;
 import com.xc.utils.GzipUtil;
@@ -46,7 +47,7 @@ public class ServerHandler extends ChannelHandlerAdapter {
             String info = new String(infoBytes);
 
             // 业务显示
-            service.show(info);
+            service.add(info, new NormalAlarm());
 
 
         } finally {

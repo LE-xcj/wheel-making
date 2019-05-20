@@ -38,33 +38,22 @@ public class WebServerAlive {
         // 定时线程池
         scheduled = Executors.newSingleThreadScheduledExecutor();
 
-
-        // 初始化alive检测类
-        webServerAlive = new WebServerAlive(
-                ConstantValue.HEARTBEAT_DETECT_IP, ConstantValue.HEARTBEAT_DETECT_PORT);
-
-
     }
 
-    public static void create() { }
 
-    /**
-     * 单例，饿汉式
-     * @param ip
-     * @param port
-     */
-    private WebServerAlive(String ip, int port) {
-
+    public static void connect(String ip, int port) {
         init(ip, port);
-
     }
+
+
+    private WebServerAlive() { }
 
     /**
      * 初始化Netty那部分
      * @param ip
      * @param port
      */
-    private void init(String ip, int port) {
+    private static void init(String ip, int port) {
 
         // 连接线程组
         EventLoopGroup connection = new NioEventLoopGroup();
@@ -109,7 +98,7 @@ public class WebServerAlive {
 
         // 每隔一秒就发送自己的运行信息
         scheduled.scheduleAtFixedRate(
-                new ServerAliveTak(future), 10, 1, TimeUnit.SECONDS);
+                new ServerAliveTak(future), 10, ConstantValue.HEARTBEAT_DETECT_PERIOD, TimeUnit.SECONDS);
 
     }
 

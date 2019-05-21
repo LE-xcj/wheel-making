@@ -32,5 +32,10 @@ public class InfoView {
 
         System.out.println("========================");
     }
+
+    public void showOffLine(Long pid) {
+        System.out.println(pid + " 连接异常.....");
+        System.out.println("====================");
+    }
 }
     

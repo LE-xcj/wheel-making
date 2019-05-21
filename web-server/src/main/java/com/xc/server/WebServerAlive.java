@@ -30,8 +30,9 @@ public class WebServerAlive {
 
     private static ScheduledExecutorService scheduled;
 
-
     private static WebServerAlive webServerAlive;
+
+    private static ServerAliveTak aliveTak;
 
     static {
 
@@ -44,7 +45,6 @@ public class WebServerAlive {
     public static void connect(String ip, int port) {
         init(ip, port);
     }
-
 
     private WebServerAlive() { }
 
@@ -96,11 +96,20 @@ public class WebServerAlive {
      */
     private static void start(ChannelFuture future) {
 
-        // 每隔一秒就发送自己的运行信息
-        scheduled.scheduleAtFixedRate(
-                new ServerAliveTak(future), 10, ConstantValue.HEARTBEAT_DETECT_PERIOD, TimeUnit.SECONDS);
+        if (null == aliveTak) {
+            aliveTak = new ServerAliveTak(future);
+
+            // 每隔一秒就发送自己的运行信息
+            scheduled.scheduleAtFixedRate(
+                    aliveTak, 15, ConstantValue.HEARTBEAT_DETECT_PERIOD, TimeUnit.SECONDS);
+        } else {
+
+            // 替换channel
+            aliveTak.setFuture(future);
+        }
 
     }
+
 
 
     /**
@@ -111,9 +120,11 @@ public class WebServerAlive {
         private ChannelFuture future;
 
         public ServerAliveTak(ChannelFuture future) {
-
             this.future = future;
+        }
 
+        public void setFuture(ChannelFuture future) {
+            this.future = future;
         }
 
         public void run() {
@@ -129,7 +140,7 @@ public class WebServerAlive {
 
 
             // 发送系统的信息
-            future.channel().writeAndFlush(Unpooled.copiedBuffer(target));
+            this.future.channel().writeAndFlush(Unpooled.copiedBuffer(target));
 
 
         }
@@ -201,6 +212,8 @@ public class WebServerAlive {
             return target;
         }
     }
+
+
 
 }
     

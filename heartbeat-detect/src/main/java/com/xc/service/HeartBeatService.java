@@ -6,6 +6,7 @@ import com.xc.pojo.vo.ProcessInfoVO;
 import com.xc.pojo.vo.SystemAndProcessVO;
 import com.xc.pojo.vo.SystemInfoVO;
 import com.xc.view.InfoView;
+import io.netty.channel.ChannelId;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,12 +25,16 @@ public class HeartBeatService {
 
     private InfoView view = new InfoView();
 
-    public void add(String info, Alarm alarm) {
+    public void add(String info, Alarm alarm, ChannelId id) {
 
         // 获取vo中的系统和进程信息
         SystemAndProcessVO vo = JSON.parseObject(info, SystemAndProcessVO.class);
         SystemInfoVO systemInfo = vo.getSystemInfo();
         ProcessInfoVO processInfo = vo.getProcessInfo();
+
+
+        // 给每个进程用channel
+        registeChannel(id, processInfo.getPid());
 
         // 添加到容器中
         add(systemInfo, processInfo);
@@ -126,5 +131,39 @@ public class HeartBeatService {
 
 
 
+    private static Map<ChannelId, Long> processChannels = new ConcurrentHashMap<ChannelId, Long>();
+
+    /**
+     * 绑定进程与channel对应关系
+     * @param id
+     * @param pid
+     */
+    private void registeChannel(ChannelId id, long pid) {
+
+        processChannels.put(id, pid);
+
+    }
+
+    /**
+     * 断开channel时，将channel移除
+     * @param id
+     */
+    public void remove(ChannelId id) {
+        processChannels.remove(id);
+    }
+
+
+    public void dealOffLine(ChannelId id) {
+
+        // 获取对应进程id
+        Long pid = processChannels.get(id);
+
+        // 将channel移除
+        remove(id);
+
+        // 展示连接异常的pid
+        view.showOffLine(pid);
+
+    }
 }
     

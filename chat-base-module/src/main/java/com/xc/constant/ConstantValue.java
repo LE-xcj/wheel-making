@@ -56,6 +56,6 @@ public class ConstantValue {
 
     public static final double MEMORY_PERCENT_THRESHOLD = 0.5;
 
-    public static final int HEARTBEAT_DETECT_PERIOD = 10;
+    public static final int HEARTBEAT_DETECT_PERIOD = 5;
 }
     

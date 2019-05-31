@@ -4,6 +4,7 @@ package com.xc.decrytion;
  * @author chujian
  * @ClassName NegateDecrytion
  * @Description 功能描述
+ * 取反解密
  * @date 2019/5/19 10:32
  */
 public class NegateDecrytion extends AbstractDecryption {

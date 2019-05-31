@@ -23,7 +23,7 @@ import java.util.zip.GZIPOutputStream;
 public class GzipUtil {
 
     /**
-     * 不适用加密方式来压缩
+     * 不使用加密方式来压缩
      * @param source
      * @return
      * @throws IOException
@@ -65,7 +65,7 @@ public class GzipUtil {
     }
 
     /**
-     * 不适用解密来解压
+     * 不使用解密来解压
      * @param data
      * @return
      * @throws IOException

@@ -49,6 +49,10 @@ public class SigarUtil {
 
     }
 
+    /**
+     * 获取主机的IP信息
+     * @return
+     */
     public static String getIP() {
         // 获取主机的网路信息
         try {
@@ -62,6 +66,10 @@ public class SigarUtil {
         return null;
     }
 
+    /**
+     * 填充操作系统的信息
+     * @param systemInfo
+     */
     private static void fillOS(SystemInfoVO systemInfo) {
 
         OperatingSystem os = OperatingSystem.getInstance();
@@ -75,6 +83,10 @@ public class SigarUtil {
 
     }
 
+    /**
+     * 填充CPU的信息
+     * @param systemInfo
+     */
     private static void fillCpu(SystemInfoVO systemInfo) {
 
         try {
@@ -105,8 +117,10 @@ public class SigarUtil {
     }
 
 
-
-
+    /**
+     * 填充内存的使用情况信息
+     * @param system
+     */
     private static void fillMemory(SystemInfoVO system) {
 
         try {

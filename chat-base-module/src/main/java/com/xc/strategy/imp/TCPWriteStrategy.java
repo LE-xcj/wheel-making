@@ -13,7 +13,7 @@ import io.netty.channel.ChannelHandlerContext;
 public class TCPWriteStrategy implements WriteStrategy {
 
     /**
-     *
+     * 自定义协议的写入方式
      * @param ctx
      * @param strDto  传送的数据
      */
